@@ -2,32 +2,37 @@
 
 namespace Yogaxv\LaravelExtensions\Commands;
 
-use Illuminate\Console\Command;
+use Illuminate\Console\GeneratorCommand;
 
-class MakeRepositoryCommand extends Command
+class MakeRepositoryCommand extends GeneratorCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'make:repository {name : New Repository Name}';
+    protected $name = 'make:repository';
+    protected $description = 'Create a new repository class';
+    protected $type = 'repository';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create new repository';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected function getStub(): string
     {
-        parent::__construct();
+//        return __DIR__ . '/Stubs/Repository.php.stub';
+        $stub = '/Stubs/Repository.php.stub';
+
+        return $this->resolveStubPath($stub);
+    }
+
+    protected function resolveStubPath($stub): string
+    {
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
+            ? $customPath
+            : __DIR__.$stub;
+    }
+
+    protected function getClassName()
+    {
+        return $this->argument('name');
+    }
+
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return $rootNamespace.'\Http\Repositories';
     }
 
     /**
@@ -35,7 +40,29 @@ class MakeRepositoryCommand extends Command
      */
     public function handle()
     {
-        // TODO HANDLE COMMAND
-        $this->info('Make repository success');
+        try {
+            parent::handle();
+
+            $this->info('Make repository success');
+
+
+        } catch (\Exception $e) {
+            $this->error("Error: ".$e->getMessage());
+        }
+    }
+
+    protected function doOtherOperations()
+    {
+        // Get the fully qualified class name (FQN)
+        $class = $this->qualifyClass($this->getNameInput());
+
+        // get the destination path, based on the default namespace
+        $path = $this->getPath($class);
+
+        $content = file_get_contents($path);
+
+        // Update the file content with additional data (regular expressions)
+
+        file_put_contents($path, $content);
     }
 }
