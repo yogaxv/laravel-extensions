@@ -1,0 +1,27 @@
+{
+    "name": "yogaxv/laravel-extensions",
+    "description": "Laravel Extensions is a small library that help you to create repository, service and etc.",
+    "type": "library",
+    "license": "MIT",
+    "require": {},
+    "authors": [
+        {
+            "name": "Yoga Prasetiyo",
+            "email": "yoga.xv@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yogaxv\\LaravelExtensions\\LaravelExtensionsProvider"
+            ],
+            "aliases": {
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Yogaxv\\LaravelExtensions\\": "src/"
+        }
+    }
+}
